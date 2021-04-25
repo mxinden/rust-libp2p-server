@@ -1,15 +1,24 @@
 use futures::executor::block_on;
 use futures::stream::StreamExt;
 use libp2p::core::upgrade;
-use libp2p::identify::{Identify, IdentifyEvent, IdentifyConfig};
+use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
+use libp2p::metrics::{Metrics, Recorder};
 use libp2p::noise;
-use libp2p::ping::{Ping, PingEvent, PingConfig};
+use libp2p::ping::{Ping, PingConfig, PingEvent};
 use libp2p::relay::v2::{Relay, RelayEvent};
+use libp2p::swarm::{NetworkBehaviourAction, NetworkBehaviourEventProcess, PollParameters};
 use libp2p::tcp::TcpConfig;
 use libp2p::Transport;
 use libp2p::{identity, NetworkBehaviour, PeerId, Swarm};
+use log::{debug, info};
+use open_metrics_client::registry::Registry;
+use std::collections::VecDeque;
 use std::error::Error;
 use std::task::{Context, Poll};
+use std::thread;
+
+mod behaviour;
+mod metric_server;
 
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
@@ -30,59 +39,23 @@ fn main() -> Result<(), Box<dyn Error>> {
         .multiplex(libp2p::yamux::YamuxConfig::default())
         .boxed();
 
-    #[derive(NetworkBehaviour)]
-    #[behaviour(out_event = "Event", event_process = false)]
-    struct Behaviour {
-        relay: Relay,
-        ping: Ping,
-        identify: Identify,
-    }
+    let mut metric_registry = Registry::default();
 
-    #[derive(Debug)]
-    enum Event {
-        Ping(PingEvent),
-        Identify(IdentifyEvent),
-        Relay(RelayEvent),
-    }
-
-    impl From<PingEvent> for Event {
-        fn from(e: PingEvent) -> Self {
-            Event::Ping(e)
-        }
-    }
-
-    impl From<IdentifyEvent> for Event {
-        fn from(e: IdentifyEvent) -> Self {
-            Event::Identify(e)
-        }
-    }
-
-    impl From<RelayEvent> for Event {
-        fn from(e: RelayEvent) -> Self {
-            Event::Relay(e)
-        }
-    }
-
-    let behaviour = Behaviour {
-        relay: Relay::new(local_peer_id, Default::default()),
-        ping: Ping::new(PingConfig::new()),
-        identify: Identify::new(IdentifyConfig::new(
-            "/TODO/0.0.1".to_string(),
-            local_key.public(),
-        )),
-    };
+    let behaviour = behaviour::Behaviour::new(local_key.public(), &mut metric_registry);
 
     let mut swarm = Swarm::new(transport, behaviour, local_peer_id);
 
     // Listen on all interfaces and whatever port the OS assigns
     swarm.listen_on("/ip4/0.0.0.0/tcp/4001".parse()?)?;
 
+    thread::spawn(move || block_on(metric_server::run(metric_registry)));
+
     let mut listening = false;
     block_on(futures::future::poll_fn(move |cx: &mut Context<'_>| {
         loop {
             match swarm.poll_next_unpin(cx) {
-                Poll::Ready(Some(Event::Relay(event))) => println!("{:?}", event),
-                Poll::Ready(Some(_)) => {},
+                Poll::Ready(Some(behaviour::Event::Relay(event))) => info!("{:?}", event),
+                Poll::Ready(Some(event)) => debug!("{:?}", event),
                 Poll::Ready(None) => return Poll::Ready(Ok(())),
                 Poll::Pending => {
                     if !listening {
