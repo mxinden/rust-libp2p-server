@@ -19,8 +19,8 @@ mod metric_server;
 
 #[derive(Debug, StructOpt)]
 #[structopt(
-    name = "Kademlia exporter",
-    about = "Monitor the state of a Kademlia Dht."
+    name = "libp2p relay server",
+    about = "Relay libp2p connections."
 )]
 struct Opt {
     #[structopt(long)]
