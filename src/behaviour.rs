@@ -1,19 +1,11 @@
-use futures::executor::block_on;
-use futures::stream::StreamExt;
-use libp2p::core::upgrade;
 use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
 use libp2p::metrics::{Metrics, Recorder};
-use libp2p::noise;
 use libp2p::ping::{Ping, PingConfig, PingEvent};
 use libp2p::relay::v2::{Relay, RelayEvent};
 use libp2p::swarm::{NetworkBehaviourAction, NetworkBehaviourEventProcess, PollParameters};
-use libp2p::tcp::TcpConfig;
-use libp2p::Transport;
-use libp2p::{identity, NetworkBehaviour, PeerId, Swarm};
-use log::{debug, info};
+use libp2p::{identity, NetworkBehaviour, PeerId};
 use open_metrics_client::registry::Registry;
 use std::collections::VecDeque;
-use std::error::Error;
 use std::task::{Context, Poll};
 
 #[derive(NetworkBehaviour)]
