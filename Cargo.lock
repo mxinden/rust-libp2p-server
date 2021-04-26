@@ -1388,14 +1388,14 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.93"
+version = "0.2.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9385f66bf6105b241aa65a61cb923ef20efc665cb9f9bb50ac2f0c4b7f378d41"
+checksum = "18794a8ad5b29321f790b55d93dfba91e125cb1a9edbd4f8e3150acc771c1a5e"
 
 [[package]]
 name = "libp2p"
 version = "0.37.1"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "atomic",
  "bytes",
@@ -1423,7 +1423,7 @@ dependencies = [
 [[package]]
 name = "libp2p-core"
 version = "0.28.2"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "asn1_der",
  "bs58",
@@ -1456,7 +1456,7 @@ dependencies = [
 [[package]]
 name = "libp2p-dns"
 version = "0.28.1"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "async-std-resolver",
  "futures",
@@ -1469,7 +1469,7 @@ dependencies = [
 [[package]]
 name = "libp2p-identify"
 version = "0.29.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "futures",
  "libp2p-core",
@@ -1484,7 +1484,7 @@ dependencies = [
 [[package]]
 name = "libp2p-kad"
 version = "0.30.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "arrayvec",
  "asynchronous-codec",
@@ -1509,7 +1509,7 @@ dependencies = [
 [[package]]
 name = "libp2p-metrics"
 version = "0.1.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "libp2p-ping",
  "open-metrics-client",
@@ -1518,7 +1518,7 @@ dependencies = [
 [[package]]
 name = "libp2p-noise"
 version = "0.30.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "bytes",
  "curve25519-dalek",
@@ -1539,7 +1539,7 @@ dependencies = [
 [[package]]
 name = "libp2p-ping"
 version = "0.29.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "futures",
  "libp2p-core",
@@ -1553,7 +1553,7 @@ dependencies = [
 [[package]]
 name = "libp2p-relay"
 version = "0.2.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "asynchronous-codec",
  "bytes",
@@ -1590,7 +1590,7 @@ dependencies = [
 [[package]]
 name = "libp2p-swarm"
 version = "0.29.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "either",
  "futures",
@@ -1605,7 +1605,7 @@ dependencies = [
 [[package]]
 name = "libp2p-swarm-derive"
 version = "0.23.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "quote",
  "syn",
@@ -1614,7 +1614,7 @@ dependencies = [
 [[package]]
 name = "libp2p-tcp"
 version = "0.28.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "async-io",
  "futures",
@@ -1630,7 +1630,7 @@ dependencies = [
 [[package]]
 name = "libp2p-yamux"
 version = "0.32.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "futures",
  "libp2p-core",
@@ -1743,7 +1743,7 @@ checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
 [[package]]
 name = "multistream-select"
 version = "0.10.3"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "bytes",
  "futures",
@@ -1841,7 +1841,7 @@ dependencies = [
 [[package]]
 name = "parity-multiaddr"
 version = "0.11.2"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#7a1fd780e9e3a0175c1934452abf11f103159aa2"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=metrics-and-relay-v2#ea5e88a100fb9f952a88bab7e2c392df6846a8b7"
 dependencies = [
  "arrayref",
  "bs58",
