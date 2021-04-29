@@ -18,8 +18,12 @@ mod behaviour;
 mod metric_server;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "libp2p relay server", about = "Relay libp2p connections.")]
+#[structopt(
+    name = "libp2p relay server",
+    about = "A limited relay server implementing the circuit relay v2 protocol."
+)]
 struct Opt {
+    /// Identity file containing an ed25519 private key.
     #[structopt(long)]
     identity: Option<PathBuf>,
 }
@@ -63,7 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             match swarm.next_event().await {
                 SwarmEvent::Behaviour(behaviour::Event::Ping(e)) => {
                     debug!("{:?}", e);
-                    metrics.record(&e)
+                    metrics.record(&e);
                 }
                 SwarmEvent::Behaviour(behaviour::Event::Relay(e)) => info!("{:?}", e),
                 SwarmEvent::Behaviour(_) => {}
