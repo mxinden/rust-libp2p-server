@@ -65,12 +65,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     block_on(async {
         loop {
             match swarm.next_event().await {
+                SwarmEvent::Behaviour(behaviour::Event::Identify(e)) => {
+                    info!("{:?}", e);
+                    metrics.record(&e);
+                }
                 SwarmEvent::Behaviour(behaviour::Event::Ping(e)) => {
                     debug!("{:?}", e);
                     metrics.record(&e);
                 }
                 SwarmEvent::Behaviour(behaviour::Event::Relay(e)) => info!("{:?}", e),
-                SwarmEvent::Behaviour(_) => {}
                 e => metrics.record(&e),
             }
 
