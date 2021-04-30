@@ -24,7 +24,7 @@ impl Behaviour {
 #[derive(Debug)]
 pub enum Event {
     Ping(PingEvent),
-    Identify(IdentifyEvent),
+    Identify(Box<IdentifyEvent>),
     Relay(RelayEvent),
 }
 
@@ -36,7 +36,7 @@ impl From<PingEvent> for Event {
 
 impl From<IdentifyEvent> for Event {
     fn from(event: IdentifyEvent) -> Self {
-        Event::Identify(event)
+        Event::Identify(Box::new(event))
     }
 }
 
