@@ -1,7 +1,16 @@
 use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
+use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaEvent};
 use libp2p::ping::{Ping, PingConfig, PingEvent};
 use libp2p::relay::v2::{Relay, RelayEvent};
-use libp2p::{identity, NetworkBehaviour, PeerId};
+use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
+use std::str::FromStr;
+
+const BOOTNODES: [&'static str; 4] = [
+    "QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
+    "QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa",
+    "QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb",
+    "QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt",
+];
 
 #[derive(NetworkBehaviour)]
 #[behaviour(out_event = "Event", event_process = false)]
@@ -9,14 +18,33 @@ pub struct Behaviour {
     relay: Relay,
     ping: Ping,
     identify: Identify,
+    kademlia: Kademlia<MemoryStore>,
 }
 
 impl Behaviour {
     pub fn new(pub_key: identity::PublicKey) -> Self {
+        let kademlia = {
+            let mut kademlia = Kademlia::new(
+                pub_key.clone().into_peer_id(),
+                MemoryStore::new(pub_key.clone().into_peer_id()),
+            );
+            let bootaddr = Multiaddr::from_str("/dnsaddr/bootstrap.libp2p.io").unwrap();
+            for peer in &BOOTNODES {
+                kademlia.add_address(&PeerId::from_str(peer).unwrap(), bootaddr.clone());
+            }
+            kademlia.bootstrap().unwrap();
+            kademlia
+        };
+
         Self {
             relay: Relay::new(PeerId::from(pub_key.clone()), Default::default()),
             ping: Ping::new(PingConfig::new()),
-            identify: Identify::new(IdentifyConfig::new("/TODO/0.0.1".to_string(), pub_key)),
+            identify: Identify::new(
+                IdentifyConfig::new("ipfs/0.1.0".to_string(), pub_key.clone()).with_agent_version(
+                    format!("rust-libp2p-relay-server/{}", env!("CARGO_PKG_VERSION")),
+                ),
+            ),
+            kademlia,
         }
     }
 }
@@ -26,6 +54,7 @@ pub enum Event {
     Ping(PingEvent),
     Identify(Box<IdentifyEvent>),
     Relay(RelayEvent),
+    Kademlia(KademliaEvent),
 }
 
 impl From<PingEvent> for Event {
@@ -43,5 +72,11 @@ impl From<IdentifyEvent> for Event {
 impl From<RelayEvent> for Event {
     fn from(event: RelayEvent) -> Self {
         Event::Relay(event)
+    }
+}
+
+impl From<KademliaEvent> for Event {
+    fn from(event: KademliaEvent) -> Self {
+        Event::Kademlia(event)
     }
 }

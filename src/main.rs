@@ -1,5 +1,6 @@
 use futures::executor::block_on;
 use libp2p::core::upgrade;
+use libp2p::dns;
 use libp2p::identity::ed25519;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::noise;
@@ -43,11 +44,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     let local_peer_id = PeerId::from(local_key.public());
     println!("Local peer id: {:?}", local_peer_id);
 
-    let tcp_transport = TcpConfig::new();
+    let transport = TcpConfig::new();
+    let transport = block_on(dns::DnsConfig::system(transport)).unwrap();
     let noise_keys = noise::Keypair::<noise::X25519Spec>::new()
         .into_authentic(&local_key)
         .expect("Signing libp2p-noise static DH keypair failed.");
-    let transport = tcp_transport
+    let transport = transport
         .upgrade(upgrade::Version::V1)
         .authenticate(noise::NoiseConfig::xx(noise_keys).into_authenticated())
         .multiplex(libp2p::yamux::YamuxConfig::default())
@@ -70,6 +72,10 @@ fn main() -> Result<(), Box<dyn Error>> {
                     metrics.record(&*e);
                 }
                 SwarmEvent::Behaviour(behaviour::Event::Ping(e)) => {
+                    debug!("{:?}", e);
+                    metrics.record(&e);
+                }
+                SwarmEvent::Behaviour(behaviour::Event::Kademlia(e)) => {
                     debug!("{:?}", e);
                     metrics.record(&e);
                 }
