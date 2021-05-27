@@ -1828,9 +1828,9 @@ dependencies = [
 
 [[package]]
 name = "open-metrics-client-derive-text-encode"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bcb7ec0f71ed2e886d4a2d6c4daedf49464cd74c8fca9ff806cacc4380947e7"
+checksum = "a15c83b586f00268c619c1cb3340ec1a6f59dd9ba1d9833a273a68e6d5cd8ffc"
 dependencies = [
  "proc-macro2",
  "quote",
