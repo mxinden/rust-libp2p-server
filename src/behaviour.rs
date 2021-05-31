@@ -1,9 +1,10 @@
 use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
-use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaEvent};
+use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaConfig, KademliaEvent};
 use libp2p::ping::{Ping, PingConfig, PingEvent};
 use libp2p::relay::v2::{Relay, RelayEvent};
 use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
 use std::str::FromStr;
+use std::time::Duration;
 
 const BOOTNODES: [&'static str; 4] = [
     "QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
@@ -24,9 +25,16 @@ pub struct Behaviour {
 impl Behaviour {
     pub fn new(pub_key: identity::PublicKey) -> Self {
         let kademlia = {
-            let mut kademlia = Kademlia::new(
+            let mut kademlia_config = KademliaConfig::default();
+            // Instantly remove records and provider records.
+            //
+            // TODO: Replace hack with option to disable both.
+            kademlia_config.set_record_ttl(Some(Duration::from_secs(0)));
+            kademlia_config.set_provider_record_ttl(Some(Duration::from_secs(0)));
+            let mut kademlia = Kademlia::with_config(
                 pub_key.clone().into_peer_id(),
                 MemoryStore::new(pub_key.clone().into_peer_id()),
+                kademlia_config,
             );
             let bootaddr = Multiaddr::from_str("/dnsaddr/bootstrap.libp2p.io").unwrap();
             for peer in &BOOTNODES {
