@@ -1,7 +1,7 @@
 use futures::executor::block_on;
+use libp2p::core::identity::ed25519;
 use libp2p::core::upgrade;
 use libp2p::dns;
-use libp2p::identity::ed25519;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::noise;
 use libp2p::swarm::SwarmEvent;
@@ -12,21 +12,21 @@ use log::{debug, info};
 use open_metrics_client::registry::Registry;
 use std::error::Error;
 use std::path::PathBuf;
+use std::str::FromStr;
 use std::thread;
 use structopt::StructOpt;
+use zeroize::Zeroizing;
 
 mod behaviour;
+mod config;
 mod metric_server;
 
 #[derive(Debug, StructOpt)]
-#[structopt(
-    name = "libp2p server",
-    about = "A rust-libp2p server binary."
-)]
+#[structopt(name = "libp2p server", about = "A rust-libp2p server binary.")]
 struct Opt {
-    /// Identity file containing an ed25519 private key.
+    /// Path to IPFS config file.
     #[structopt(long)]
-    identity: Option<PathBuf>,
+    config: Option<PathBuf>,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -34,20 +34,34 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let opt = Opt::from_args();
 
-    let local_key: identity::Keypair = if let Some(path) = opt.identity {
-        let mut bytes = hex::decode(std::fs::read_to_string(path)?)?;
-        let secret_key = ed25519::SecretKey::from_bytes(&mut bytes)?;
-        identity::Keypair::Ed25519(secret_key.into())
-    } else {
-        identity::Keypair::generate_ed25519()
+    let (local_peer_id, local_keypair) = match opt.config {
+        Some(path) => {
+            let config = Zeroizing::new(config::Config::from_file(path)?);
+
+            let keypair = identity::Keypair::from_protobuf_encoding(&Zeroizing::new(
+                base64::decode(config.identity.priv_key.as_bytes())?,
+            ))?;
+
+            let peer_id = keypair.public().into();
+            assert_eq!(
+                    PeerId::from_str(&config.identity.peer_id)?,
+                    peer_id,
+                    "Expect peer id derived from private key and peer id retrieved from config to match."
+                );
+
+            (peer_id, keypair)
+        }
+        None => {
+            let keypair = identity::Keypair::Ed25519(ed25519::Keypair::generate());
+            (keypair.public().into(), keypair)
+        }
     };
-    let local_peer_id = PeerId::from(local_key.public());
     println!("Local peer id: {:?}", local_peer_id);
 
     let transport = TcpConfig::new();
     let transport = block_on(dns::DnsConfig::system(transport)).unwrap();
     let noise_keys = noise::Keypair::<noise::X25519Spec>::new()
-        .into_authentic(&local_key)
+        .into_authentic(&local_keypair)
         .expect("Signing libp2p-noise static DH keypair failed.");
     let transport = transport
         .upgrade(upgrade::Version::V1)
@@ -55,7 +69,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .multiplex(libp2p::yamux::YamuxConfig::default())
         .boxed();
 
-    let behaviour = behaviour::Behaviour::new(local_key.public());
+    let behaviour = behaviour::Behaviour::new(local_keypair.public());
     let mut swarm = Swarm::new(transport, behaviour, local_peer_id);
     swarm.listen_on("/ip4/0.0.0.0/tcp/4001".parse()?)?;
 
