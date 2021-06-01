@@ -49,7 +49,7 @@ impl Behaviour {
             ping: Ping::new(PingConfig::new()),
             identify: Identify::new(
                 IdentifyConfig::new("ipfs/0.1.0".to_string(), pub_key.clone()).with_agent_version(
-                    format!("rust-libp2p-relay-server/{}", env!("CARGO_PKG_VERSION")),
+                    format!("rust-libp2p-server/{}", env!("CARGO_PKG_VERSION")),
                 ),
             ),
             kademlia,

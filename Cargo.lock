@@ -1521,7 +1521,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "libp2p-relay-server"
+name = "libp2p-server"
 version = "0.1.0"
 dependencies = [
  "env_logger",
