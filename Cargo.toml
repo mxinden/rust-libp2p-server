@@ -1,9 +1,9 @@
 [package]
-name = "libp2p-relay-server"
+name = "libp2p-server"
 version = "0.1.0"
 authors = ["Max Inden <mail@max-inden.de>"]
 edition = "2018"
-description = "A limited relay server implementing the circuit relay v2 protocol."
+description = "A rust-libp2p server binary."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

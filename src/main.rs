@@ -20,8 +20,8 @@ mod metric_server;
 
 #[derive(Debug, StructOpt)]
 #[structopt(
-    name = "libp2p relay server",
-    about = "A limited relay server implementing the circuit relay v2 protocol."
+    name = "libp2p server",
+    about = "A rust-libp2p server binary."
 )]
 struct Opt {
     /// Identity file containing an ed25519 private key.
