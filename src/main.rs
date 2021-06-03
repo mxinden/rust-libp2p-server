@@ -77,7 +77,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     let metrics = Metrics::new(&mut metric_registry);
     thread::spawn(move || block_on(metric_server::run(metric_registry)));
 
-    let mut listening = false;
     block_on(async {
         loop {
             match swarm.next_event().await {
@@ -94,13 +93,12 @@ fn main() -> Result<(), Box<dyn Error>> {
                     metrics.record(&e);
                 }
                 SwarmEvent::Behaviour(behaviour::Event::Relay(e)) => info!("{:?}", e),
-                e => metrics.record(&e),
-            }
+                e => {
+                    if let SwarmEvent::NewListenAddr(addr) = &e {
+                        println!("Listening on {:?}", addr);
+                    }
 
-            if !listening {
-                for addr in Swarm::listeners(&swarm) {
-                    println!("Listening on {:?}", addr);
-                    listening = true;
+                    metrics.record(&e)
                 }
             }
         }
