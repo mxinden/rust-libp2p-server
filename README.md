@@ -1,28 +1,28 @@
-# Rust libp2p Relay Server
+# Rust libp2p Server
 
-A limited relay server implementing the [circuit relay
-v2](https://github.com/libp2p/specs/issues/314) protocol.
+A rust-libp2p based server implementation running:
 
-See https://github.com/vyzo/libp2p-relay for the corresponding Golang
-implementation.
+- the [libp2p Kademlia protocol](https://github.com/libp2p/specs/pull/108/)
+
+- the [Circuit Relay v2 protocol](https://github.com/libp2p/specs/issues/314)
 
 ## Usage
 
 ```
 $ cargo run -- --help
-libp2p relay server 0.1.0
-A limited relay server implementing the circuit relay v2 protocol.
+libp2p server 0.1.0
+A rust-libp2p server binary.
 
 USAGE:
-    libp2p-relay-server [OPTIONS]
+    libp2p-server [OPTIONS]
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
 
 OPTIONS:
-        --identity <identity>    Identity file containing an ed25519 private key
-        
+        --identity <identity>    Identity file containing an ed25519 private key        
+
 $ cargo run
 Local peer id: PeerId("12D3KooWDx8yJKVEN5LsCsovRb8HyHKA79cBshzShsE14ioS6Kok")
 Listening for metric requests on 0.0.0.0:8080/metrics

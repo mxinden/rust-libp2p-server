@@ -6,7 +6,7 @@ use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
 use std::str::FromStr;
 use std::time::Duration;
 
-const BOOTNODES: [&'static str; 4] = [
+const BOOTNODES: [&str; 4] = [
     "QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN",
     "QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa",
     "QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb",
@@ -48,9 +48,10 @@ impl Behaviour {
             relay: Relay::new(PeerId::from(pub_key.clone()), Default::default()),
             ping: Ping::new(PingConfig::new()),
             identify: Identify::new(
-                IdentifyConfig::new("ipfs/0.1.0".to_string(), pub_key.clone()).with_agent_version(
-                    format!("rust-libp2p-relay-server/{}", env!("CARGO_PKG_VERSION")),
-                ),
+                IdentifyConfig::new("ipfs/0.1.0".to_string(), pub_key).with_agent_version(format!(
+                    "rust-libp2p-server/{}",
+                    env!("CARGO_PKG_VERSION")
+                )),
             ),
             kademlia,
         }
