@@ -27,6 +27,10 @@ struct Opt {
     /// Path to IPFS config file.
     #[structopt(long)]
     config: Option<PathBuf>,
+
+    /// Metric endpoint path.
+    #[structopt(long, default_value = "/metrics")]
+    metrics_path: String,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -34,9 +38,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let opt = Opt::from_args();
 
-    let (local_peer_id, local_keypair) = match opt.config {
+    let (local_peer_id, local_keypair) = match &opt.config {
         Some(path) => {
-            let config = Zeroizing::new(config::Config::from_file(path)?);
+            let config = Zeroizing::new(config::Config::from_file(path.as_path())?);
 
             let keypair = identity::Keypair::from_protobuf_encoding(&Zeroizing::new(
                 base64::decode(config.identity.priv_key.as_bytes())?,
@@ -75,7 +79,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut metric_registry = Registry::default();
     let metrics = Metrics::new(&mut metric_registry);
-    thread::spawn(move || block_on(metric_server::run(metric_registry)));
+    thread::spawn(move || block_on(metric_server::run(metric_registry, opt.metrics_path)));
 
     block_on(async {
         loop {

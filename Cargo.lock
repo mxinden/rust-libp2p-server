@@ -1527,7 +1527,6 @@ dependencies = [
  "base64 0.13.0",
  "env_logger",
  "futures",
- "hex",
  "libp2p",
  "log",
  "open-metrics-client",

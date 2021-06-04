@@ -1,6 +1,6 @@
 use serde_derive::Deserialize;
 use std::error::Error;
-use std::path::PathBuf;
+use std::path::Path;
 
 #[derive(Clone, Deserialize)]
 #[serde(rename_all = "PascalCase")]
@@ -9,7 +9,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn from_file(path: PathBuf) -> Result<Self, Box<dyn Error>> {
+    pub fn from_file(path: &Path) -> Result<Self, Box<dyn Error>> {
         Ok(serde_json::from_str(&std::fs::read_to_string(path)?)?)
     }
 }
