@@ -19,7 +19,7 @@ pub struct Behaviour {
     relay: Relay,
     ping: Ping,
     identify: Identify,
-    kademlia: Kademlia<MemoryStore>,
+    pub kademlia: Kademlia<MemoryStore>,
 }
 
 impl Behaviour {

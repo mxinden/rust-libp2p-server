@@ -1,4 +1,5 @@
 use futures::executor::block_on;
+use futures_timer::Delay;
 use libp2p::core::identity::ed25519;
 use libp2p::core::upgrade;
 use libp2p::dns;
@@ -13,13 +14,17 @@ use open_metrics_client::registry::Registry;
 use std::error::Error;
 use std::path::PathBuf;
 use std::str::FromStr;
+use std::task::Poll;
 use std::thread;
+use std::time::Duration;
 use structopt::StructOpt;
 use zeroize::Zeroizing;
 
 mod behaviour;
 mod config;
 mod metric_server;
+
+const BOOTSTRAP_INTERVAL: Duration = Duration::from_secs(5 * 60);
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "libp2p server", about = "A rust-libp2p server binary.")]
@@ -81,8 +86,19 @@ fn main() -> Result<(), Box<dyn Error>> {
     let metrics = Metrics::new(&mut metric_registry);
     thread::spawn(move || block_on(metric_server::run(metric_registry, opt.metrics_path)));
 
+    let mut bootstrap_timer = Delay::new(BOOTSTRAP_INTERVAL);
+
     block_on(async {
         loop {
+            if let Poll::Ready(()) = futures::poll!(&mut bootstrap_timer) {
+                bootstrap_timer.reset(BOOTSTRAP_INTERVAL);
+                swarm
+                    .behaviour_mut()
+                    .kademlia
+                    .bootstrap()
+                    .expect("Some peer to be known.");
+            }
+
             match swarm.next_event().await {
                 SwarmEvent::Behaviour(behaviour::Event::Identify(e)) => {
                     info!("{:?}", e);
