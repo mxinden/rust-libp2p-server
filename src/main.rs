@@ -3,6 +3,8 @@ use futures_timer::Delay;
 use libp2p::core::identity::ed25519;
 use libp2p::core::upgrade;
 use libp2p::dns;
+use libp2p::identify::{IdentifyEvent, IdentifyInfo};
+use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::noise;
 use libp2p::swarm::SwarmEvent;
@@ -92,17 +94,33 @@ fn main() -> Result<(), Box<dyn Error>> {
         loop {
             if let Poll::Ready(()) = futures::poll!(&mut bootstrap_timer) {
                 bootstrap_timer.reset(BOOTSTRAP_INTERVAL);
-                swarm
-                    .behaviour_mut()
-                    .kademlia
-                    .bootstrap()
-                    .expect("Some peer to be known.");
+                let _ = swarm.behaviour_mut().kademlia.bootstrap();
             }
 
             match swarm.next_event().await {
                 SwarmEvent::Behaviour(behaviour::Event::Identify(e)) => {
                     info!("{:?}", e);
                     metrics.record(&*e);
+
+                    if let IdentifyEvent::Received {
+                        peer_id,
+                        info:
+                            IdentifyInfo {
+                                listen_addrs,
+                                protocols,
+                                ..
+                            },
+                    } = *e
+                    {
+                        if protocols
+                            .iter()
+                            .any(|p| p.as_bytes() == kad::protocol::DEFAULT_PROTO_NAME)
+                        {
+                            for addr in listen_addrs {
+                                swarm.behaviour_mut().kademlia.add_address(&peer_id, addr);
+                            }
+                        }
+                    }
                 }
                 SwarmEvent::Behaviour(behaviour::Event::Ping(e)) => {
                     debug!("{:?}", e);
