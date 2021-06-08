@@ -13,7 +13,11 @@ pub async fn run(registry: Registry, path: String) -> std::result::Result<(), st
     app.at(&path).get(|req: tide::Request<State>| async move {
         let mut encoded = Vec::new();
         encode(&mut encoded, &req.state().registry.lock().unwrap()).unwrap();
-        Ok(String::from_utf8(encoded).unwrap())
+        let response = tide::Response::builder(200)
+            .body(encoded)
+            .content_type("application/openmetrics-text; version=1.0.0; charset=utf-8")
+            .build();
+        Ok(response)
     });
 
     let listen_addr = "0.0.0.0:8888";
