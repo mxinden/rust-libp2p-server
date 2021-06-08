@@ -12,6 +12,7 @@ use libp2p::tcp::TcpConfig;
 use libp2p::Transport;
 use libp2p::{identity, PeerId, Swarm};
 use log::{debug, info};
+use open_metrics_client::metrics::info::Info;
 use open_metrics_client::registry::Registry;
 use std::error::Error;
 use std::path::PathBuf;
@@ -86,6 +87,12 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut metric_registry = Registry::default();
     let metrics = Metrics::new(&mut metric_registry);
+    let build_info = Info::new(vec![("version".to_string(), env!("CARGO_PKG_VERSION"))]);
+    metric_registry.register(
+        "build_info",
+        "A metric with a constant '1' value labeled by version",
+        Box::new(build_info),
+    );
     thread::spawn(move || block_on(metric_server::run(metric_registry, opt.metrics_path)));
 
     let mut bootstrap_timer = Delay::new(BOOTSTRAP_INTERVAL);
