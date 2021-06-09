@@ -89,7 +89,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let metrics = Metrics::new(&mut metric_registry);
     let build_info = Info::new(vec![("version".to_string(), env!("CARGO_PKG_VERSION"))]);
     metric_registry.register(
-        "build_info",
+        "build",
         "A metric with a constant '1' value labeled by version",
         Box::new(build_info),
     );
