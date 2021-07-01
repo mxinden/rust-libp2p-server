@@ -2,9 +2,9 @@
 
 A rust-libp2p based server implementation running:
 
-- the [libp2p Kademlia protocol](https://github.com/libp2p/specs/pull/108/)
+- the [Kademlia protocol](https://github.com/libp2p/specs/tree/master/kad-dht)
 
-- the [Circuit Relay v2 protocol](https://github.com/libp2p/specs/issues/314)
+- the [Circuit Relay v2 protocol](https://github.com/libp2p/specs/blob/master/relay/circuit-v2.md)
 
 ## Usage
 
