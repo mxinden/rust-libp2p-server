@@ -10,7 +10,7 @@ A rust-libp2p based server implementation running:
 
 ```
 $ cargo run -- --help
-libp2p server 0.1.0
+libp2p server 0.3.0
 A rust-libp2p server binary.
 
 USAGE:
