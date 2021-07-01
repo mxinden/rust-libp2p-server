@@ -1,7 +1,7 @@
 use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
 use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaConfig, KademliaEvent};
 use libp2p::ping::{Ping, PingConfig, PingEvent};
-use libp2p::relay::v2::{Relay, RelayEvent};
+use libp2p::relay::v2::relay;
 use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
 use std::str::FromStr;
 use std::time::Duration;
@@ -16,7 +16,7 @@ const BOOTNODES: [&str; 4] = [
 #[derive(NetworkBehaviour)]
 #[behaviour(out_event = "Event", event_process = false)]
 pub struct Behaviour {
-    relay: Relay,
+    relay: relay::Relay,
     ping: Ping,
     identify: Identify,
     pub kademlia: Kademlia<MemoryStore>,
@@ -45,7 +45,7 @@ impl Behaviour {
         };
 
         Self {
-            relay: Relay::new(PeerId::from(pub_key.clone()), Default::default()),
+            relay: relay::Relay::new(PeerId::from(pub_key.clone()), Default::default()),
             ping: Ping::new(PingConfig::new()),
             identify: Identify::new(
                 IdentifyConfig::new("ipfs/0.1.0".to_string(), pub_key).with_agent_version(format!(
@@ -62,7 +62,7 @@ impl Behaviour {
 pub enum Event {
     Ping(PingEvent),
     Identify(Box<IdentifyEvent>),
-    Relay(RelayEvent),
+    Relay(relay::Event),
     Kademlia(KademliaEvent),
 }
 
@@ -78,8 +78,8 @@ impl From<IdentifyEvent> for Event {
     }
 }
 
-impl From<RelayEvent> for Event {
-    fn from(event: RelayEvent) -> Self {
+impl From<relay::Event> for Event {
+    fn from(event: relay::Event) -> Self {
         Event::Relay(event)
     }
 }

@@ -1,4 +1,5 @@
 use futures::executor::block_on;
+use futures::stream::StreamExt;
 use futures_timer::Delay;
 use libp2p::core::identity::ed25519;
 use libp2p::core::upgrade;
@@ -104,7 +105,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 let _ = swarm.behaviour_mut().kademlia.bootstrap();
             }
 
-            match swarm.next_event().await {
+            match swarm.next().await.expect("Swarm not to terminate.") {
                 SwarmEvent::Behaviour(behaviour::Event::Identify(e)) => {
                     info!("{:?}", e);
                     metrics.record(&*e);
