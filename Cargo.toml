@@ -15,7 +15,7 @@ futures-timer = "3"
 libp2p = { git = "https://github.com/mxinden/rust-libp2p", branch = "metrics-and-relay-v2", default-features = false, features = ["dns-async-std", "noise", "tcp-async-io", "yamux", "identify", "kad", "ping", "relay", "metrics"] }
 log = "0.4"
 open-metrics-client = "0.11.2"
-serde = "1.0.128"
+serde = "1.0.129"
 serde_derive = "1.0.125"
 serde_json = "1.0"
 structopt = "0.3.22"
