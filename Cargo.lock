@@ -1459,7 +1459,7 @@ dependencies = [
  "libp2p-kad",
  "libp2p-ping",
  "libp2p-swarm",
- "open-metrics-client",
+ "open-metrics-client 0.11.2",
 ]
 
 [[package]]
@@ -1530,7 +1530,7 @@ dependencies = [
  "futures-timer",
  "libp2p",
  "log",
- "open-metrics-client",
+ "open-metrics-client 0.12.1",
  "serde",
  "serde_derive",
  "serde_json",
@@ -1807,6 +1807,18 @@ name = "open-metrics-client"
 version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f516a71bfb09926b0ac9fdbb098b1a4c3da538216bd6a94024b9f9d5240edcb1"
+dependencies = [
+ "dtoa",
+ "itoa",
+ "open-metrics-client-derive-text-encode",
+ "owning_ref",
+]
+
+[[package]]
+name = "open-metrics-client"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a76789abb29de148d833bdaa8941aabc0d6306affaf4a7c1302cc309b151e4f"
 dependencies = [
  "dtoa",
  "itoa",
