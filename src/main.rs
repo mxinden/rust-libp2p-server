@@ -8,10 +8,10 @@ use libp2p::identify::{IdentifyEvent, IdentifyInfo};
 use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::noise;
-use libp2p::swarm::SwarmEvent;
+use libp2p::swarm::{SwarmBuilder, SwarmEvent};
 use libp2p::tcp::TcpConfig;
 use libp2p::Transport;
-use libp2p::{identity, PeerId, Swarm};
+use libp2p::{identity, PeerId};
 use log::{debug, info};
 use open_metrics_client::metrics::info::Info;
 use open_metrics_client::registry::Registry;
@@ -83,7 +83,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         .boxed();
 
     let behaviour = behaviour::Behaviour::new(local_keypair.public());
-    let mut swarm = Swarm::new(transport, behaviour, local_peer_id);
+    let mut swarm = SwarmBuilder::new(transport, behaviour, local_peer_id)
+        .executor(Box::new(|fut| {
+            async_std::task::spawn(fut);
+        }))
+        .build();
     swarm.listen_on("/ip4/0.0.0.0/tcp/4001".parse()?)?;
 
     let mut metric_registry = Registry::default();
@@ -138,10 +142,13 @@ fn main() -> Result<(), Box<dyn Error>> {
                     debug!("{:?}", e);
                     metrics.record(&e);
                 }
-                SwarmEvent::Behaviour(behaviour::Event::Relay(e)) => info!("{:?}", e),
+                SwarmEvent::Behaviour(behaviour::Event::Relay(e)) => {
+                    info!("{:?}", e);
+                    metrics.record(&e)
+                }
                 e => {
-                    if let SwarmEvent::NewListenAddr(addr) = &e {
-                        println!("Listening on {:?}", addr);
+                    if let SwarmEvent::NewListenAddr { address, .. } = &e {
+                        println!("Listening on {:?}", address);
                     }
 
                     metrics.record(&e)
