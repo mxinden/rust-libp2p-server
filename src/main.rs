@@ -40,6 +40,10 @@ struct Opt {
     /// Metric endpoint path.
     #[structopt(long, default_value = "/metrics")]
     metrics_path: String,
+
+    /// Whether to run the libp2p Kademlia protocol and join the IPFS DHT.
+    #[structopt(long)]
+    enable_kamdelia: bool,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -82,7 +86,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .multiplex(libp2p::yamux::YamuxConfig::default())
         .boxed();
 
-    let behaviour = behaviour::Behaviour::new(local_keypair.public());
+    let behaviour = behaviour::Behaviour::new(local_keypair.public(), opt.enable_kamdelia);
     let mut swarm = SwarmBuilder::new(transport, behaviour, local_peer_id)
         .executor(Box::new(|fut| {
             async_std::task::spawn(fut);
@@ -106,7 +110,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         loop {
             if let Poll::Ready(()) = futures::poll!(&mut bootstrap_timer) {
                 bootstrap_timer.reset(BOOTSTRAP_INTERVAL);
-                let _ = swarm.behaviour_mut().kademlia.bootstrap();
+                let _ = swarm
+                    .behaviour_mut()
+                    .kademlia
+                    .as_mut()
+                    .map(|k| k.bootstrap());
             }
 
             match swarm.next().await.expect("Swarm not to terminate.") {
@@ -129,7 +137,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                             .any(|p| p.as_bytes() == kad::protocol::DEFAULT_PROTO_NAME)
                         {
                             for addr in listen_addrs {
-                                swarm.behaviour_mut().kademlia.add_address(&peer_id, addr);
+                                swarm
+                                    .behaviour_mut()
+                                    .kademlia
+                                    .as_mut()
+                                    .map(|k| k.add_address(&peer_id, addr));
                             }
                         }
                     }

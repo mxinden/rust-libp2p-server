@@ -2,6 +2,7 @@ use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
 use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaConfig, KademliaEvent};
 use libp2p::ping::{Ping, PingConfig, PingEvent};
 use libp2p::relay::v2::relay;
+use libp2p::swarm::toggle::Toggle;
 use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
 use std::str::FromStr;
 use std::time::Duration;
@@ -19,12 +20,12 @@ pub struct Behaviour {
     relay: relay::Relay,
     ping: Ping,
     identify: Identify,
-    pub kademlia: Kademlia<MemoryStore>,
+    pub kademlia: Toggle<Kademlia<MemoryStore>>,
 }
 
 impl Behaviour {
-    pub fn new(pub_key: identity::PublicKey) -> Self {
-        let kademlia = {
+    pub fn new(pub_key: identity::PublicKey, enable_kademlia: bool) -> Self {
+        let kademlia = if enable_kademlia {
             let mut kademlia_config = KademliaConfig::default();
             // Instantly remove records and provider records.
             //
@@ -41,8 +42,11 @@ impl Behaviour {
                 kademlia.add_address(&PeerId::from_str(peer).unwrap(), bootaddr.clone());
             }
             kademlia.bootstrap().unwrap();
-            kademlia
-        };
+            Some(kademlia)
+        } else {
+            None
+        }
+        .into();
 
         Self {
             relay: relay::Relay::new(PeerId::from(pub_key.clone()), Default::default()),
