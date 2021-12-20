@@ -43,7 +43,7 @@ struct Opt {
 
     /// Whether to run the libp2p Kademlia protocol and join the IPFS DHT.
     #[structopt(long)]
-    enable_kamdelia: bool,
+    enable_kademlia: bool,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -86,7 +86,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .multiplex(libp2p::yamux::YamuxConfig::default())
         .boxed();
 
-    let behaviour = behaviour::Behaviour::new(local_keypair.public(), opt.enable_kamdelia);
+    let behaviour = behaviour::Behaviour::new(local_keypair.public(), opt.enable_kademlia);
     let mut swarm = SwarmBuilder::new(transport, behaviour, local_peer_id)
         .executor(Box::new(|fut| {
             async_std::task::spawn(fut);
