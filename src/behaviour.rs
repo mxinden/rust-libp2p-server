@@ -1,8 +1,9 @@
+use libp2p::autonat;
 use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
 use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaConfig, KademliaEvent};
 use libp2p::ping::{Ping, PingConfig, PingEvent};
 use libp2p::relay::v2::relay;
-use libp2p::swarm::toggle::Toggle;
+use libp2p::swarm::behaviour::toggle::Toggle;
 use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
 use std::str::FromStr;
 use std::time::Duration;
@@ -21,10 +22,11 @@ pub struct Behaviour {
     ping: Ping,
     identify: Identify,
     pub kademlia: Toggle<Kademlia<MemoryStore>>,
+    autonat: Toggle<autonat::Behaviour>,
 }
 
 impl Behaviour {
-    pub fn new(pub_key: identity::PublicKey, enable_kademlia: bool) -> Self {
+    pub fn new(pub_key: identity::PublicKey, enable_kademlia: bool, enable_autonat: bool) -> Self {
         let kademlia = if enable_kademlia {
             let mut kademlia_config = KademliaConfig::default();
             // Instantly remove records and provider records.
@@ -48,6 +50,16 @@ impl Behaviour {
         }
         .into();
 
+        let autonat = if enable_autonat {
+            Some(autonat::Behaviour::new(
+                PeerId::from(pub_key.clone()),
+                Default::default(),
+            ))
+        } else {
+            None
+        }
+        .into();
+
         Self {
             relay: relay::Relay::new(PeerId::from(pub_key.clone()), Default::default()),
             ping: Ping::new(PingConfig::new()),
@@ -58,6 +70,7 @@ impl Behaviour {
                 )),
             ),
             kademlia,
+            autonat,
         }
     }
 }
@@ -68,6 +81,7 @@ pub enum Event {
     Identify(Box<IdentifyEvent>),
     Relay(relay::Event),
     Kademlia(KademliaEvent),
+    Autonat(autonat::NatStatus),
 }
 
 impl From<PingEvent> for Event {
@@ -91,5 +105,11 @@ impl From<relay::Event> for Event {
 impl From<KademliaEvent> for Event {
     fn from(event: KademliaEvent) -> Self {
         Event::Kademlia(event)
+    }
+}
+
+impl From<autonat::NatStatus> for Event {
+    fn from(event: autonat::NatStatus) -> Self {
+        Event::Autonat(event)
     }
 }

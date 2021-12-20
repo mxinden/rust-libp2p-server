@@ -44,6 +44,10 @@ struct Opt {
     /// Whether to run the libp2p Kademlia protocol and join the IPFS DHT.
     #[structopt(long)]
     enable_kademlia: bool,
+
+    /// Whether to run the libp2p Autonat protocol.
+    #[structopt(long)]
+    enable_autonat: bool,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -86,7 +90,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         .multiplex(libp2p::yamux::YamuxConfig::default())
         .boxed();
 
-    let behaviour = behaviour::Behaviour::new(local_keypair.public(), opt.enable_kademlia);
+    let behaviour = behaviour::Behaviour::new(
+        local_keypair.public(),
+        opt.enable_kademlia,
+        opt.enable_autonat,
+    );
     let mut swarm = SwarmBuilder::new(transport, behaviour, local_peer_id)
         .executor(Box::new(|fut| {
             async_std::task::spawn(fut);
@@ -157,6 +165,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                 SwarmEvent::Behaviour(behaviour::Event::Relay(e)) => {
                     info!("{:?}", e);
                     metrics.record(&e)
+                }
+                SwarmEvent::Behaviour(behaviour::Event::Autonat(e)) => {
+                    info!("{:?}", e);
+                    // TODO: Add metric recording for `NatStatus`.
+                    // metrics.record(&e)
                 }
                 e => {
                     if let SwarmEvent::NewListenAddr { address, .. } = &e {
