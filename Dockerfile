@@ -1,4 +1,4 @@
-FROM rust:1.55-bullseye as builder
+FROM rust:1.57-bullseye as builder
 WORKDIR /usr/src/rust-libp2p-server
 COPY . .
 RUN cargo install --path .
