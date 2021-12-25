@@ -1502,7 +1502,7 @@ checksum = "fbe5e23404da5b4f555ef85ebed98fb4083e55a00c317800bc2a50ede9f3d219"
 [[package]]
 name = "libp2p"
 version = "0.42.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "atomic",
  "bytes 1.1.0",
@@ -1534,7 +1534,7 @@ dependencies = [
 [[package]]
 name = "libp2p-autonat"
 version = "0.20.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "async-trait",
  "futures",
@@ -1552,7 +1552,7 @@ dependencies = [
 [[package]]
 name = "libp2p-core"
 version = "0.31.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "asn1_der",
  "bs58",
@@ -1587,7 +1587,7 @@ dependencies = [
 [[package]]
 name = "libp2p-dns"
 version = "0.31.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "async-std-resolver",
  "futures",
@@ -1600,7 +1600,7 @@ dependencies = [
 [[package]]
 name = "libp2p-identify"
 version = "0.33.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "futures",
  "futures-timer",
@@ -1616,7 +1616,7 @@ dependencies = [
 [[package]]
 name = "libp2p-kad"
 version = "0.34.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "arrayvec",
  "asynchronous-codec",
@@ -1642,7 +1642,7 @@ dependencies = [
 [[package]]
 name = "libp2p-metrics"
 version = "0.3.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "libp2p-core",
  "libp2p-identify",
@@ -1656,7 +1656,7 @@ dependencies = [
 [[package]]
 name = "libp2p-noise"
 version = "0.34.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "bytes 1.1.0",
  "curve25519-dalek",
@@ -1677,7 +1677,7 @@ dependencies = [
 [[package]]
 name = "libp2p-ping"
 version = "0.33.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "futures",
  "futures-timer",
@@ -1692,7 +1692,7 @@ dependencies = [
 [[package]]
 name = "libp2p-relay"
 version = "0.6.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "asynchronous-codec",
  "bytes 1.1.0",
@@ -1716,7 +1716,7 @@ dependencies = [
 [[package]]
 name = "libp2p-request-response"
 version = "0.15.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "async-trait",
  "bytes 1.1.0",
@@ -1753,7 +1753,7 @@ dependencies = [
 [[package]]
 name = "libp2p-swarm"
 version = "0.33.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "either",
  "futures",
@@ -1769,7 +1769,7 @@ dependencies = [
 [[package]]
 name = "libp2p-swarm-derive"
 version = "0.26.1"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "quote",
  "syn",
@@ -1778,7 +1778,7 @@ dependencies = [
 [[package]]
 name = "libp2p-tcp"
 version = "0.31.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "async-io",
  "futures",
@@ -1794,7 +1794,7 @@ dependencies = [
 [[package]]
 name = "libp2p-yamux"
 version = "0.35.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "futures",
  "libp2p-core",
@@ -1966,7 +1966,7 @@ checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
 [[package]]
 name = "multistream-select"
 version = "0.11.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#a2232c344a05485754fa4080c208ff035c5ae668"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
 dependencies = [
  "bytes 1.1.0",
  "futures",
