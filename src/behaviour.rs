@@ -81,7 +81,7 @@ pub enum Event {
     Identify(Box<IdentifyEvent>),
     Relay(relay::Event),
     Kademlia(KademliaEvent),
-    Autonat(autonat::NatStatus),
+    Autonat(autonat::Event),
 }
 
 impl From<PingEvent> for Event {
@@ -108,8 +108,8 @@ impl From<KademliaEvent> for Event {
     }
 }
 
-impl From<autonat::NatStatus> for Event {
-    fn from(event: autonat::NatStatus) -> Self {
+impl From<autonat::Event> for Event {
+    fn from(event: autonat::Event) -> Self {
         Event::Autonat(event)
     }
 }

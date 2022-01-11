@@ -863,9 +863,9 @@ checksum = "212d0f5754cb6769937f4501cc0e67f4f4483c8d2c3e1e922ee9edbe4ab4c7c0"
 
 [[package]]
 name = "dtoa"
-version = "0.4.8"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "56899898ce76aaf4a0f24d914c97ea6ed976d42fec6ad33fcbb0a1103e07b2b0"
+checksum = "5caaa75cbd2b960ff1e5392d2cfb1f44717fffe12fc1f32b7b5d1267f99732a6"
 
 [[package]]
 name = "ecdsa"
@@ -1361,30 +1361,19 @@ dependencies = [
 
 [[package]]
 name = "if-addrs"
-version = "0.6.7"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2273e421f7c4f0fc99e1934fe4776f59d8df2972f4199d703fc0da9f2a9f73de"
+checksum = "cbc0fa01ffc752e9dbc72818cdb072cd028b86be5e09dd04c5a643704fe101a9"
 dependencies = [
- "if-addrs-sys",
  "libc",
  "winapi",
 ]
 
 [[package]]
-name = "if-addrs-sys"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de74b9dd780476e837e5eb5ab7c88b49ed304126e412030a0adba99c8efe79ea"
-dependencies = [
- "cc",
- "libc",
-]
-
-[[package]]
 name = "if-watch"
-version = "0.2.2"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae8ab7f67bad3240049cb24fb9cb0b4c2c6af4c245840917fbbdededeee91179"
+checksum = "ec28b7d8086301d1cb476c65b12fd7d450073c7d0d82c08f7e6671655e15538c"
 dependencies = [
  "async-io",
  "futures",
@@ -1502,7 +1491,7 @@ checksum = "fbe5e23404da5b4f555ef85ebed98fb4083e55a00c317800bc2a50ede9f3d219"
 [[package]]
 name = "libp2p"
 version = "0.42.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "atomic",
  "bytes 1.1.0",
@@ -1534,7 +1523,7 @@ dependencies = [
 [[package]]
 name = "libp2p-autonat"
 version = "0.20.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "async-trait",
  "futures",
@@ -1552,7 +1541,7 @@ dependencies = [
 [[package]]
 name = "libp2p-core"
 version = "0.31.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "asn1_der",
  "bs58",
@@ -1587,7 +1576,7 @@ dependencies = [
 [[package]]
 name = "libp2p-dns"
 version = "0.31.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "async-std-resolver",
  "futures",
@@ -1600,7 +1589,7 @@ dependencies = [
 [[package]]
 name = "libp2p-identify"
 version = "0.33.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "futures",
  "futures-timer",
@@ -1616,7 +1605,7 @@ dependencies = [
 [[package]]
 name = "libp2p-kad"
 version = "0.34.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "arrayvec",
  "asynchronous-codec",
@@ -1642,7 +1631,7 @@ dependencies = [
 [[package]]
 name = "libp2p-metrics"
 version = "0.3.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "libp2p-core",
  "libp2p-identify",
@@ -1656,7 +1645,7 @@ dependencies = [
 [[package]]
 name = "libp2p-noise"
 version = "0.34.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "bytes 1.1.0",
  "curve25519-dalek",
@@ -1677,7 +1666,7 @@ dependencies = [
 [[package]]
 name = "libp2p-ping"
 version = "0.33.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "futures",
  "futures-timer",
@@ -1692,7 +1681,7 @@ dependencies = [
 [[package]]
 name = "libp2p-relay"
 version = "0.6.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "asynchronous-codec",
  "bytes 1.1.0",
@@ -1716,7 +1705,7 @@ dependencies = [
 [[package]]
 name = "libp2p-request-response"
 version = "0.15.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "async-trait",
  "bytes 1.1.0",
@@ -1732,7 +1721,7 @@ dependencies = [
 
 [[package]]
 name = "libp2p-server"
-version = "0.5.3"
+version = "0.5.4"
 dependencies = [
  "async-std",
  "base64 0.13.0",
@@ -1753,7 +1742,7 @@ dependencies = [
 [[package]]
 name = "libp2p-swarm"
 version = "0.33.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "either",
  "futures",
@@ -1769,7 +1758,7 @@ dependencies = [
 [[package]]
 name = "libp2p-swarm-derive"
 version = "0.26.1"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "quote",
  "syn",
@@ -1778,7 +1767,7 @@ dependencies = [
 [[package]]
 name = "libp2p-tcp"
 version = "0.31.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "async-io",
  "futures",
@@ -1794,7 +1783,7 @@ dependencies = [
 [[package]]
 name = "libp2p-yamux"
 version = "0.35.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "futures",
  "libp2p-core",
@@ -1966,7 +1955,7 @@ checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
 [[package]]
 name = "multistream-select"
 version = "0.11.0"
-source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#ecdf0d4d5b3ee7b30307da0efb1d1a52e3376a42"
+source = "git+https://github.com/mxinden/rust-libp2p?branch=relay-v2-autonat#6ff74a035489e486ede3a64ee9d45009b851dbac"
 dependencies = [
  "bytes 1.1.0",
  "futures",
@@ -2025,12 +2014,12 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
 name = "open-metrics-client"
-version = "0.13.0"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e224744b2e4da5b241857d2363a13bce60425f7b6ae2a5ff88d4d5557d9cc85"
+checksum = "f85842b073145726190373213c63f852020fb884c841a3a1f390637267a2fb8c"
 dependencies = [
  "dtoa",
- "itoa 0.4.8",
+ "itoa 1.0.1",
  "open-metrics-client-derive-text-encode",
  "owning_ref",
 ]
