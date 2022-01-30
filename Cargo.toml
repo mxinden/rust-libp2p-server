@@ -13,7 +13,7 @@ base64 = "0.13"
 env_logger = "0.9.0"
 futures = "0.3.19"
 futures-timer = "3"
-libp2p = { git = "https://github.com/mxinden/rust-libp2p", branch = "relay-v2-autonat", default-features = false, features = ["autonat", "dns-async-std", "noise", "tcp-async-io", "yamux", "identify", "kad", "ping", "relay", "metrics"] }
+libp2p = { version = "0.42.0", default-features = false, features = ["autonat", "dns-async-std", "noise", "tcp-async-io", "yamux", "identify", "kad", "ping", "relay", "metrics"] }
 log = "0.4"
 open-metrics-client = "0.14.0"
 serde = "1.0.136"
