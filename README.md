@@ -6,6 +6,8 @@ A rust-libp2p based server implementation running:
 
 - the [Circuit Relay v2 protocol](https://github.com/libp2p/specs/blob/master/relay/circuit-v2.md)
 
+- the [AutoNAT protocol](https://github.com/libp2p/specs/blob/master/autonat/README.md)
+
 ## Usage
 
 ```
