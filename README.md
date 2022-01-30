@@ -12,18 +12,21 @@ A rust-libp2p based server implementation running:
 
 ```
 $ cargo run -- --help
-libp2p server 0.3.0
+libp2p server 0.5.4
 A rust-libp2p server binary.
 
 USAGE:
-    libp2p-server [OPTIONS]
+    libp2p-server [FLAGS] [OPTIONS]
 
 FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+        --enable-autonat     Whether to run the libp2p Autonat protocol
+        --enable-kademlia    Whether to run the libp2p Kademlia protocol and join the IPFS DHT
+    -h, --help               Prints help information
+    -V, --version            Prints version information
 
 OPTIONS:
-        --identity <identity>    Identity file containing an ed25519 private key        
+        --config <config>                Path to IPFS config file
+        --metrics-path <metrics-path>    Metric endpoint path [default: /metrics]
 
 $ cargo run
 Local peer id: PeerId("12D3KooWDx8yJKVEN5LsCsovRb8HyHKA79cBshzShsE14ioS6Kok")
