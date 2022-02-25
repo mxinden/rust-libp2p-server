@@ -1,5 +1,5 @@
-use open_metrics_client::encoding::text::encode;
-use open_metrics_client::registry::Registry;
+use prometheus_client::encoding::text::encode;
+use prometheus_client::registry::Registry;
 
 use std::sync::{Arc, Mutex};
 

@@ -15,7 +15,7 @@ futures = "0.3.21"
 futures-timer = "3"
 libp2p = { version = "0.43.0", default-features = false, features = ["autonat", "dns-async-std", "noise", "tcp-async-io", "yamux", "identify", "kad", "ping", "relay", "metrics"] }
 log = "0.4"
-open-metrics-client = "0.14.0"
+prometheus-client = "0.15.0"
 serde = "1.0.136"
 serde_derive = "1.0.125"
 serde_json = "1.0"
