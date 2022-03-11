@@ -2,6 +2,7 @@ use futures::executor::block_on;
 use futures::stream::StreamExt;
 use futures_timer::Delay;
 use libp2p::core::identity::ed25519;
+use libp2p::core::multiaddr::Protocol;
 use libp2p::core::upgrade;
 use libp2p::dns;
 use libp2p::identify::{IdentifyEvent, IdentifyInfo};
@@ -134,8 +135,8 @@ fn main() -> Result<(), Box<dyn Error>> {
                         peer_id,
                         info:
                             IdentifyInfo {
-                                listen_addrs,
-                                protocols,
+                                ref listen_addrs,
+                                ref protocols,
                                 ..
                             },
                     } = *e
@@ -144,13 +145,20 @@ fn main() -> Result<(), Box<dyn Error>> {
                             .iter()
                             .any(|p| p.as_bytes() == kad::protocol::DEFAULT_PROTO_NAME)
                         {
-                            for addr in listen_addrs {
+                            for addr in listen_addrs.iter().cloned() {
                                 swarm
                                     .behaviour_mut()
                                     .kademlia
                                     .as_mut()
                                     .map(|k| k.add_address(&peer_id, addr));
                             }
+                        }
+
+                        if listen_addrs
+                            .iter()
+                            .any(|address| address.iter().any(|p| p == Protocol::P2pCircuit))
+                        {
+                            println!("{:?}", e);
                         }
                     }
                 }
