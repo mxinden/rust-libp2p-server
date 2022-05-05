@@ -1,6 +1,6 @@
 [package]
 name = "libp2p-server"
-version = "0.5.4"
+version = "0.6.0"
 authors = ["Max Inden <mail@max-inden.de>"]
 edition = "2018"
 description = "A rust-libp2p server binary."
