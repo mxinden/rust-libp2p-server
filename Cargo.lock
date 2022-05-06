@@ -1542,7 +1542,7 @@ dependencies = [
  "libp2p-ping",
  "libp2p-relay",
  "libp2p-swarm",
- "prometheus-client",
+ "prometheus-client 0.15.1",
 ]
 
 [[package]]
@@ -1638,7 +1638,7 @@ dependencies = [
  "futures-timer",
  "libp2p",
  "log",
- "prometheus-client",
+ "prometheus-client 0.16.0",
  "serde",
  "serde_derive",
  "serde_json",
@@ -2194,6 +2194,18 @@ name = "prometheus-client"
 version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c9a896938cc6018c64f279888b8c7559d3725210d5db9a3a1ee6bc7188d51d34"
+dependencies = [
+ "dtoa",
+ "itoa",
+ "owning_ref",
+ "prometheus-client-derive-text-encode",
+]
+
+[[package]]
+name = "prometheus-client"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ac1abe0255c04d15f571427a2d1e00099016506cf3297b53853acd2b7eb87825"
 dependencies = [
  "dtoa",
  "itoa",
