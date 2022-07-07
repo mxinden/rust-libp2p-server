@@ -9,7 +9,7 @@ use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::noise;
 use libp2p::swarm::{SwarmBuilder, SwarmEvent};
-use libp2p::tcp::TcpConfig;
+use libp2p::tcp::{GenTcpConfig, TcpTransport};
 use libp2p::Transport;
 use libp2p::{identity, PeerId};
 use log::{debug, info};
@@ -79,7 +79,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
     println!("Local peer id: {:?}", local_peer_id);
 
-    let transport = TcpConfig::new();
+    let transport = TcpTransport::new(GenTcpConfig::new());
     let transport = block_on(dns::DnsConfig::system(transport)).unwrap();
     let noise_keys = noise::Keypair::<noise::X25519Spec>::new()
         .into_authentic(&local_keypair)
