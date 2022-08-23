@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.7.0] - [unreleased]
 ### Changed
-- Update to libp2p v0.45.0.
+- Update to libp2p v0.47.0.
 
 ## [0.6.0] - [2022-05-05]
 ### Changed
