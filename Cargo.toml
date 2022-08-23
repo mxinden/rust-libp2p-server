@@ -2,7 +2,7 @@
 name = "libp2p-server"
 version = "0.7.0"
 authors = ["Max Inden <mail@max-inden.de>"]
-edition = "2018"
+edition = "2021"
 description = "A rust-libp2p server binary."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
