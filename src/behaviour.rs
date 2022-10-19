@@ -1,7 +1,7 @@
 use libp2p::autonat;
-use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
+use libp2p::identify;
 use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaConfig, KademliaEvent};
-use libp2p::ping::{Ping, PingConfig, PingEvent};
+use libp2p::ping;
 use libp2p::relay::v2::relay;
 use libp2p::swarm::behaviour::toggle::Toggle;
 use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
@@ -19,8 +19,8 @@ const BOOTNODES: [&str; 4] = [
 #[behaviour(out_event = "Event", event_process = false)]
 pub struct Behaviour {
     relay: relay::Relay,
-    ping: Ping,
-    identify: Identify,
+    ping: ping::Behaviour,
+    identify: identify::Behaviour,
     pub kademlia: Toggle<Kademlia<MemoryStore>>,
     autonat: Toggle<autonat::Behaviour>,
 }
@@ -62,12 +62,11 @@ impl Behaviour {
 
         Self {
             relay: relay::Relay::new(PeerId::from(pub_key.clone()), Default::default()),
-            ping: Ping::new(PingConfig::new()),
-            identify: Identify::new(
-                IdentifyConfig::new("ipfs/0.1.0".to_string(), pub_key).with_agent_version(format!(
-                    "rust-libp2p-server/{}",
-                    env!("CARGO_PKG_VERSION")
-                )),
+            ping: ping::Behaviour::new(ping::Config::new()),
+            identify: identify::Behaviour::new(
+                identify::Config::new("ipfs/0.1.0".to_string(), pub_key).with_agent_version(
+                    format!("rust-libp2p-server/{}", env!("CARGO_PKG_VERSION")),
+                ),
             ),
             kademlia,
             autonat,
@@ -77,21 +76,21 @@ impl Behaviour {
 
 #[derive(Debug)]
 pub enum Event {
-    Ping(PingEvent),
-    Identify(Box<IdentifyEvent>),
+    Ping(ping::Event),
+    Identify(Box<identify::Event>),
     Relay(relay::Event),
     Kademlia(KademliaEvent),
     Autonat(autonat::Event),
 }
 
-impl From<PingEvent> for Event {
-    fn from(event: PingEvent) -> Self {
+impl From<ping::Event> for Event {
+    fn from(event: ping::Event) -> Self {
         Event::Ping(event)
     }
 }
 
-impl From<IdentifyEvent> for Event {
-    fn from(event: IdentifyEvent) -> Self {
+impl From<identify::Event> for Event {
+    fn from(event: identify::Event) -> Self {
         Event::Identify(Box::new(event))
     }
 }

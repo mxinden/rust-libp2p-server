@@ -4,7 +4,7 @@ use futures_timer::Delay;
 use libp2p::core::identity::ed25519;
 use libp2p::core::upgrade;
 use libp2p::dns;
-use libp2p::identify::{IdentifyEvent, IdentifyInfo};
+use libp2p::identify;
 use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::noise;
@@ -130,10 +130,10 @@ fn main() -> Result<(), Box<dyn Error>> {
                     info!("{:?}", e);
                     metrics.record(&*e);
 
-                    if let IdentifyEvent::Received {
+                    if let identify::Event::Received {
                         peer_id,
                         info:
-                            IdentifyInfo {
+                            identify::Info {
                                 listen_addrs,
                                 protocols,
                                 ..
