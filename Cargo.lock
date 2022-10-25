@@ -417,9 +417,9 @@ checksum = "3441f0f7b02788e948e47f457ca01f1d7e6d92c693bc132c22b087d3141c03ff"
 
 [[package]]
 name = "base64"
-version = "0.13.0"
+version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
+checksum = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
 
 [[package]]
 name = "bincode"
@@ -642,7 +642,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "03a5d7b21829bc7b4bf4754a978a241ae54ea55a40f92bb20216e54096f4b951"
 dependencies = [
  "aes-gcm 0.8.0",
- "base64 0.13.0",
+ "base64 0.13.1",
  "hkdf",
  "hmac 0.10.1",
  "percent-encoding",
@@ -1232,7 +1232,7 @@ dependencies = [
  "anyhow",
  "async-channel",
  "async-std",
- "base64 0.13.0",
+ "base64 0.13.1",
  "cookie",
  "futures-lite",
  "infer",
@@ -1667,7 +1667,7 @@ name = "libp2p-server"
 version = "0.7.0"
 dependencies = [
  "async-std",
- "base64 0.13.0",
+ "base64 0.13.1",
  "env_logger",
  "futures",
  "futures-timer",
