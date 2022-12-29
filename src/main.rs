@@ -1,21 +1,28 @@
 use futures::executor::block_on;
 use futures::stream::StreamExt;
 use futures_timer::Delay;
+use libp2p::core;
 use libp2p::core::identity::ed25519;
+use libp2p::core::muxing::StreamMuxerBox;
 use libp2p::core::upgrade;
 use libp2p::dns;
 use libp2p::identify;
 use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
+use libp2p::mplex;
 use libp2p::noise;
+use libp2p::swarm::derive_prelude::EitherOutput;
 use libp2p::swarm::{SwarmBuilder, SwarmEvent};
-use libp2p::tcp::{GenTcpConfig, TcpTransport};
+use libp2p::tcp;
+use libp2p::yamux;
 use libp2p::Transport;
 use libp2p::{identity, PeerId};
+use libp2p::{InboundUpgradeExt, OutboundUpgradeExt};
 use log::{debug, info};
 use prometheus_client::metrics::info::Info;
 use prometheus_client::registry::Registry;
 use std::error::Error;
+use std::io;
 use std::path::PathBuf;
 use std::str::FromStr;
 use std::task::Poll;
@@ -79,28 +86,64 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
     println!("Local peer id: {:?}", local_peer_id);
 
-    let transport = TcpTransport::new(GenTcpConfig::new());
-    let transport = block_on(dns::DnsConfig::system(transport)).unwrap();
-    let noise_keys = noise::Keypair::<noise::X25519Spec>::new()
-        .into_authentic(&local_keypair)
-        .expect("Signing libp2p-noise static DH keypair failed.");
-    let transport = transport
-        .upgrade(upgrade::Version::V1)
-        .authenticate(noise::NoiseConfig::xx(noise_keys).into_authenticated())
-        .multiplex(libp2p::yamux::YamuxConfig::default())
-        .boxed();
+    let transport = {
+        let authentication_config = {
+            let noise_keypair_spec = noise::Keypair::<noise::X25519Spec>::new()
+                .into_authentic(&local_keypair)
+                .unwrap();
+
+            noise::NoiseConfig::xx(noise_keypair_spec).into_authenticated()
+        };
+
+        let multiplexing_config = {
+            let mut mplex_config = mplex::MplexConfig::new();
+            mplex_config.set_max_buffer_behaviour(mplex::MaxBufferBehaviour::Block);
+            mplex_config.set_max_buffer_size(usize::MAX);
+
+            let mut yamux_config = yamux::YamuxConfig::default();
+            // Enable proper flow-control: window updates are only sent when
+            // buffered data has been consumed.
+            yamux_config.set_window_update_mode(yamux::WindowUpdateMode::on_read());
+
+            core::upgrade::SelectUpgrade::new(yamux_config, mplex_config)
+                .map_inbound(core::muxing::StreamMuxerBox::new)
+                .map_outbound(core::muxing::StreamMuxerBox::new)
+        };
+
+        let tcp_transport =
+            tcp::async_io::Transport::new(tcp::Config::new().port_reuse(true).nodelay(true))
+                .upgrade(upgrade::Version::V1)
+                .authenticate(authentication_config)
+                .multiplex(multiplexing_config)
+                .timeout(Duration::from_secs(20));
+
+        let quic_transport = {
+            let mut config = libp2p::quic::Config::new(&local_keypair);
+            config.support_draft_29 = true;
+            libp2p::quic::async_std::Transport::new(config)
+        };
+
+        block_on(dns::DnsConfig::system(
+            libp2p::core::transport::OrTransport::new(quic_transport, tcp_transport),
+        ))
+        .unwrap()
+        .map(|either_output, _| match either_output {
+            EitherOutput::First((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+            EitherOutput::Second((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+        })
+        .map_err(|err| io::Error::new(io::ErrorKind::Other, err))
+        .boxed()
+    };
 
     let behaviour = behaviour::Behaviour::new(
         local_keypair.public(),
         opt.enable_kademlia,
         opt.enable_autonat,
     );
-    let mut swarm = SwarmBuilder::new(transport, behaviour, local_peer_id)
-        .executor(Box::new(|fut| {
-            async_std::task::spawn(fut);
-        }))
-        .build();
+    let mut swarm =
+        SwarmBuilder::with_async_std_executor(transport, behaviour, local_peer_id).build();
     swarm.listen_on("/ip4/0.0.0.0/tcp/4001".parse()?)?;
+    swarm.listen_on("/ip4/0.0.0.0/udp/4001/quic".parse()?)?;
 
     let mut metric_registry = Registry::default();
     let metrics = Metrics::new(&mut metric_registry);

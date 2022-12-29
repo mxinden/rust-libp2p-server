@@ -4,7 +4,7 @@ use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaConfig, Kademlia
 use libp2p::ping;
 use libp2p::relay::v2::relay;
 use libp2p::swarm::behaviour::toggle::Toggle;
-use libp2p::{identity, Multiaddr, NetworkBehaviour, PeerId};
+use libp2p::{identity, swarm::NetworkBehaviour, Multiaddr, PeerId};
 use std::str::FromStr;
 use std::time::Duration;
 
