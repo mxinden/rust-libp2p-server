@@ -11,7 +11,7 @@ pub async fn run(registry: Registry, path: String) -> std::result::Result<(), st
     });
 
     app.at(&path).get(|req: tide::Request<State>| async move {
-        let mut encoded = Vec::new();
+        let mut encoded = String::new();
         encode(&mut encoded, &req.state().registry.lock().unwrap()).unwrap();
         let response = tide::Response::builder(200)
             .body(encoded)

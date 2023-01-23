@@ -151,7 +151,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     metric_registry.register(
         "build",
         "A metric with a constant '1' value labeled by version",
-        Box::new(build_info),
+        build_info,
     );
     thread::spawn(move || block_on(metric_server::run(metric_registry, opt.metrics_path)));
 

@@ -2,7 +2,7 @@ use libp2p::autonat;
 use libp2p::identify;
 use libp2p::kad::{record::store::MemoryStore, Kademlia, KademliaConfig, KademliaEvent};
 use libp2p::ping;
-use libp2p::relay::v2::relay;
+use libp2p::relay;
 use libp2p::swarm::behaviour::toggle::Toggle;
 use libp2p::{identity, swarm::NetworkBehaviour, Multiaddr, PeerId};
 use std::str::FromStr;
@@ -18,7 +18,7 @@ const BOOTNODES: [&str; 4] = [
 #[derive(NetworkBehaviour)]
 #[behaviour(out_event = "Event", event_process = false)]
 pub struct Behaviour {
-    relay: relay::Relay,
+    relay: relay::Behaviour,
     ping: ping::Behaviour,
     identify: identify::Behaviour,
     pub kademlia: Toggle<Kademlia<MemoryStore>>,
@@ -61,7 +61,7 @@ impl Behaviour {
         .into();
 
         Self {
-            relay: relay::Relay::new(PeerId::from(pub_key.clone()), Default::default()),
+            relay: relay::Behaviour::new(PeerId::from(pub_key.clone()), Default::default()),
             ping: ping::Behaviour::new(ping::Config::new()),
             identify: identify::Behaviour::new(
                 identify::Config::new("ipfs/0.1.0".to_string(), pub_key).with_agent_version(
