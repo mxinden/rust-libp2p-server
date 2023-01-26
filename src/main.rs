@@ -1,4 +1,5 @@
 use futures::executor::block_on;
+use futures::future::Either;
 use futures::stream::StreamExt;
 use futures_timer::Delay;
 use libp2p::core;
@@ -11,7 +12,6 @@ use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::mplex;
 use libp2p::noise;
-use libp2p::swarm::derive_prelude::EitherOutput;
 use libp2p::swarm::{SwarmBuilder, SwarmEvent};
 use libp2p::tcp;
 use libp2p::yamux;
@@ -128,8 +128,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         ))
         .unwrap()
         .map(|either_output, _| match either_output {
-            EitherOutput::First((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
-            EitherOutput::Second((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+            Either::Left((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+            Either::Right((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
         })
         .map_err(|err| io::Error::new(io::ErrorKind::Other, err))
         .boxed()
