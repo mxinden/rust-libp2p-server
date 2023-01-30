@@ -11,7 +11,7 @@ description = "A rust-libp2p server binary."
 async-std = "1.12.0"
 base64 = "0.20"
 env_logger = "0.10.0"
-futures = "0.3.25"
+futures = "0.3.26"
 futures-timer = "3"
 libp2p = { git = "https://github.com/libp2p/rust-libp2p", version = "0.51.0", default-features = false, features = ["autonat", "dns", "async-std", "noise", "tcp", "yamux", "identify", "kad", "ping", "relay", "metrics", "rsa", "macros", "mplex", "quic"] }
 log = "0.4"
