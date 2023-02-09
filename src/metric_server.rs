@@ -21,7 +21,7 @@ pub async fn run(registry: Registry, path: String) -> std::result::Result<(), st
     });
 
     let listen_addr = "0.0.0.0:8888";
-    println!("Listening for metric requests on {}{}", listen_addr, path);
+    println!("Listening for metric requests on {listen_addr}{path}");
     app.listen(listen_addr).await?;
 
     Ok(())
