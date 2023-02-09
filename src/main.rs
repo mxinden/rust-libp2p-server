@@ -84,7 +84,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             (keypair.public().into(), keypair)
         }
     };
-    println!("Local peer id: {:?}", local_peer_id);
+    println!("Local peer id: {local_peer_id:?}");
 
     let transport = {
         let authentication_config = {
@@ -216,7 +216,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 }
                 e => {
                     if let SwarmEvent::NewListenAddr { address, .. } = &e {
-                        println!("Listening on {:?}", address);
+                        println!("Listening on {address:?}");
                     }
 
                     metrics.record(&e)
