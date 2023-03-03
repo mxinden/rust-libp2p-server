@@ -1,8 +1,6 @@
 FROM rust:1.66-bullseye as builder
 WORKDIR /usr/src/rust-libp2p-server
 
-RUN apt-get update && apt-get install -y cmake protobuf-compiler
-
 COPY . .
 RUN cargo install --path .
 
