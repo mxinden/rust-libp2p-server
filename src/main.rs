@@ -3,11 +3,12 @@ use futures::future::Either;
 use futures::stream::StreamExt;
 use futures_timer::Delay;
 use libp2p::core;
-use libp2p::core::identity::ed25519;
 use libp2p::core::muxing::StreamMuxerBox;
 use libp2p::core::upgrade;
 use libp2p::dns;
 use libp2p::identify;
+use libp2p::identity;
+use libp2p::identity::PeerId;
 use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
 use libp2p::mplex;
@@ -16,7 +17,6 @@ use libp2p::swarm::{SwarmBuilder, SwarmEvent};
 use libp2p::tcp;
 use libp2p::yamux;
 use libp2p::Transport;
-use libp2p::{identity, PeerId};
 use libp2p::{InboundUpgradeExt, OutboundUpgradeExt};
 use log::{debug, info};
 use prometheus_client::metrics::info::Info;
@@ -80,7 +80,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             (peer_id, keypair)
         }
         None => {
-            let keypair = identity::Keypair::Ed25519(ed25519::Keypair::generate());
+            let keypair = identity::Keypair::generate_ed25519();
             (keypair.public().into(), keypair)
         }
     };
