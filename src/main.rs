@@ -2,7 +2,6 @@ use futures::executor::block_on;
 use futures::future::Either;
 use futures::stream::StreamExt;
 use futures_timer::Delay;
-use libp2p::core;
 use libp2p::core::muxing::StreamMuxerBox;
 use libp2p::core::upgrade;
 use libp2p::dns;
@@ -11,13 +10,11 @@ use libp2p::identity;
 use libp2p::identity::PeerId;
 use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
-use libp2p::mplex;
 use libp2p::noise;
 use libp2p::swarm::{SwarmBuilder, SwarmEvent};
 use libp2p::tcp;
 use libp2p::yamux;
 use libp2p::Transport;
-use libp2p::{InboundUpgradeExt, OutboundUpgradeExt};
 use log::{debug, info};
 use prometheus_client::metrics::info::Info;
 use prometheus_client::registry::Registry;
@@ -95,26 +92,16 @@ fn main() -> Result<(), Box<dyn Error>> {
             noise::NoiseConfig::xx(noise_keypair_spec).into_authenticated()
         };
 
-        let multiplexing_config = {
-            let mut mplex_config = mplex::MplexConfig::new();
-            mplex_config.set_max_buffer_behaviour(mplex::MaxBufferBehaviour::Block);
-            mplex_config.set_max_buffer_size(usize::MAX);
-
-            let mut yamux_config = yamux::YamuxConfig::default();
-            // Enable proper flow-control: window updates are only sent when
-            // buffered data has been consumed.
-            yamux_config.set_window_update_mode(yamux::WindowUpdateMode::on_read());
-
-            core::upgrade::SelectUpgrade::new(yamux_config, mplex_config)
-                .map_inbound(core::muxing::StreamMuxerBox::new)
-                .map_outbound(core::muxing::StreamMuxerBox::new)
-        };
+        let mut yamux_config = yamux::YamuxConfig::default();
+        // Enable proper flow-control: window updates are only sent when
+        // buffered data has been consumed.
+        yamux_config.set_window_update_mode(yamux::WindowUpdateMode::on_read());
 
         let tcp_transport =
             tcp::async_io::Transport::new(tcp::Config::new().port_reuse(true).nodelay(true))
                 .upgrade(upgrade::Version::V1)
                 .authenticate(authentication_config)
-                .multiplex(multiplexing_config)
+                .multiplex(yamux_config)
                 .timeout(Duration::from_secs(20));
 
         let quic_transport = {
