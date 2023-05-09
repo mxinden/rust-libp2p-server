@@ -33,7 +33,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --benches
+          args: --benches --locked
 
   test:
     name: Test Suite
