@@ -84,24 +84,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("Local peer id: {local_peer_id:?}");
 
     let transport = {
-        let authentication_config = {
-            let noise_keypair_spec = noise::Keypair::<noise::X25519Spec>::new()
-                .into_authentic(&local_keypair)
-                .unwrap();
-
-            noise::NoiseConfig::xx(noise_keypair_spec).into_authenticated()
-        };
-
-        let mut yamux_config = yamux::YamuxConfig::default();
-        // Enable proper flow-control: window updates are only sent when
-        // buffered data has been consumed.
-        yamux_config.set_window_update_mode(yamux::WindowUpdateMode::on_read());
-
         let tcp_transport =
             tcp::async_io::Transport::new(tcp::Config::new().port_reuse(true).nodelay(true))
                 .upgrade(upgrade::Version::V1)
-                .authenticate(authentication_config)
-                .multiplex(yamux_config)
+                .authenticate(noise::Config::new(&local_keypair)?)
+                .multiplex(yamux::Config::default())
                 .timeout(Duration::from_secs(20));
 
         let quic_transport = {
