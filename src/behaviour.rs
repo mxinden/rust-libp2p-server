@@ -16,7 +16,7 @@ const BOOTNODES: [&str; 4] = [
 ];
 
 #[derive(NetworkBehaviour)]
-#[behaviour(out_event = "Event", event_process = false)]
+#[behaviour(to_swarm = "Event", event_process = false)]
 pub struct Behaviour {
     relay: relay::Behaviour,
     ping: ping::Behaviour,
