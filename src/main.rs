@@ -1,3 +1,4 @@
+use base64::Engine;
 use futures::executor::block_on;
 use futures::future::Either;
 use futures::stream::StreamExt;
@@ -64,7 +65,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             let config = Zeroizing::new(config::Config::from_file(path.as_path())?);
 
             let keypair = identity::Keypair::from_protobuf_encoding(&Zeroizing::new(
-                base64::decode(config.identity.priv_key.as_bytes())?,
+                base64::engine::general_purpose::STANDARD
+                    .decode(config.identity.priv_key.as_bytes())?,
             ))?;
 
             let peer_id = keypair.public().into();
