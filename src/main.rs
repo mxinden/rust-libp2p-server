@@ -92,9 +92,9 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .timeout(Duration::from_secs(20));
 
         let quic_transport = {
-            let mut config = libp2p::quic::Config::new(&local_keypair);
+            let mut config = libp2p_quic::Config::new(&local_keypair);
             config.support_draft_29 = true;
-            libp2p::quic::async_std::Transport::new(config)
+            libp2p_quic::async_std::Transport::new(config)
         };
 
         block_on(dns::DnsConfig::system(
@@ -157,10 +157,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                             },
                     } = *e
                     {
-                        if protocols
-                            .iter()
-                            .any(|p| p.as_bytes() == kad::protocol::DEFAULT_PROTO_NAME)
-                        {
+                        if protocols.iter().any(|p| *p == kad::PROTOCOL_NAME) {
                             for addr in listen_addrs {
                                 swarm
                                     .behaviour_mut()
