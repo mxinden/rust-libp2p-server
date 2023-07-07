@@ -17,7 +17,7 @@ libp2p = { git = "https://github.com/libp2p/rust-libp2p", version = "0.52.0", de
 libp2p-quic = { git = "https://github.com/libp2p/rust-libp2p", version = "0.8.0-alpha", default-features = false, features = ["async-std"] }
 log = "0.4"
 prometheus-client = "0.21.0"
-serde = "1.0.164"
+serde = "1.0.167"
 serde_derive = "1.0.125"
 serde_json = "1.0"
 structopt = "0.3.26"
