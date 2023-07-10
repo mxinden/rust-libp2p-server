@@ -119,7 +119,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         log::warn!("No listen addresses configured.");
     }
     for address in config.addresses.swarm.iter().filter(filter_out_ipv6_quic) {
-        swarm.listen_on(address.clone())?;
+        match swarm.listen_on(address.clone()) {
+            Ok(_) => {}
+            Err(e @ libp2p::TransportError::MultiaddrNotSupported(_)) => {
+                log::warn!("Failed to listen on {address}, continuing anyways, {e}")
+            }
+            Err(e) => return Err(e.into()),
+        }
     }
     if config.addresses.announce.is_empty() {
         log::warn!("No external addresses configured.");
