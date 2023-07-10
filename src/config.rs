@@ -28,7 +28,7 @@ pub struct Identity {
 #[serde(rename_all = "PascalCase")]
 pub struct Addresses {
     pub swarm: Vec<Multiaddr>,
-    pub announce: Vec<Multiaddr>,
+    pub append_announce: Vec<Multiaddr>,
 }
 
 impl zeroize::Zeroize for Config {

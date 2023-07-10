@@ -127,17 +127,21 @@ fn main() -> Result<(), Box<dyn Error>> {
             Err(e) => return Err(e.into()),
         }
     }
-    if config.addresses.announce.is_empty() {
+    if config.addresses.append_announce.is_empty() {
         log::warn!("No external addresses configured.");
     }
     for address in config
         .addresses
-        .announce
+        .append_announce
         .iter()
         .filter(filter_out_ipv6_quic)
     {
         swarm.add_external_address(address.clone())
     }
+    log::info!(
+        "External addresses: {:?}",
+        swarm.external_addresses().collect::<Vec<_>>()
+    );
 
     let mut metric_registry = Registry::default();
     let metrics = Metrics::new(&mut metric_registry);
