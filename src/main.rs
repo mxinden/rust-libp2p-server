@@ -11,10 +11,12 @@ use libp2p::identity;
 use libp2p::identity::PeerId;
 use libp2p::kad;
 use libp2p::metrics::{Metrics, Recorder};
+use libp2p::multiaddr::Protocol;
 use libp2p::noise;
 use libp2p::swarm::{SwarmBuilder, SwarmEvent};
 use libp2p::tcp;
 use libp2p::yamux;
+use libp2p::Multiaddr;
 use libp2p::Transport;
 use log::{debug, info};
 use prometheus_client::metrics::info::Info;
@@ -40,7 +42,7 @@ const BOOTSTRAP_INTERVAL: Duration = Duration::from_secs(5 * 60);
 struct Opt {
     /// Path to IPFS config file.
     #[structopt(long)]
-    config: Option<PathBuf>,
+    config: PathBuf,
 
     /// Metric endpoint path.
     #[structopt(long, default_value = "/metrics")]
@@ -60,28 +62,22 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let opt = Opt::from_args();
 
-    let (local_peer_id, local_keypair) = match &opt.config {
-        Some(path) => {
-            let config = Zeroizing::new(config::Config::from_file(path.as_path())?);
+    let config = Zeroizing::new(config::Config::from_file(opt.config.as_path())?);
 
-            let keypair = identity::Keypair::from_protobuf_encoding(&Zeroizing::new(
-                base64::engine::general_purpose::STANDARD
-                    .decode(config.identity.priv_key.as_bytes())?,
-            ))?;
+    let (local_peer_id, local_keypair) = {
+        let keypair = identity::Keypair::from_protobuf_encoding(&Zeroizing::new(
+            base64::engine::general_purpose::STANDARD
+                .decode(config.identity.priv_key.as_bytes())?,
+        ))?;
 
-            let peer_id = keypair.public().into();
-            assert_eq!(
-                    PeerId::from_str(&config.identity.peer_id)?,
-                    peer_id,
-                    "Expect peer id derived from private key and peer id retrieved from config to match."
-                );
+        let peer_id = keypair.public().into();
+        assert_eq!(
+            PeerId::from_str(&config.identity.peer_id)?,
+            peer_id,
+            "Expect peer id derived from private key and peer id retrieved from config to match."
+        );
 
-            (peer_id, keypair)
-        }
-        None => {
-            let keypair = identity::Keypair::generate_ed25519();
-            (keypair.public().into(), keypair)
-        }
+        (peer_id, keypair)
     };
     println!("Local peer id: {local_peer_id:?}");
 
@@ -118,8 +114,24 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
     let mut swarm =
         SwarmBuilder::with_async_std_executor(transport, behaviour, local_peer_id).build();
-    swarm.listen_on("/ip4/0.0.0.0/tcp/4001".parse()?)?;
-    swarm.listen_on("/ip4/0.0.0.0/udp/4001/quic-v1".parse()?)?;
+
+    if config.addresses.swarm.is_empty() {
+        log::warn!("No listen addresses configured.");
+    }
+    for address in config.addresses.swarm.iter().filter(filter_out_ipv6_quic) {
+        swarm.listen_on(address.clone())?;
+    }
+    if config.addresses.announce.is_empty() {
+        log::warn!("No external addresses configured.");
+    }
+    for address in config
+        .addresses
+        .announce
+        .iter()
+        .filter(filter_out_ipv6_quic)
+    {
+        swarm.add_external_address(address.clone())
+    }
 
     let mut metric_registry = Registry::default();
     let metrics = Metrics::new(&mut metric_registry);
@@ -197,4 +209,24 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
         }
     })
+}
+
+fn filter_out_ipv6_quic(m: &&Multiaddr) -> bool {
+    let mut iter = m.iter();
+
+    let is_ipv6_quic = matches!(
+        (iter.next(), iter.next(), iter.next()),
+        (
+            Some(Protocol::Ip6(_)),
+            Some(Protocol::Udp(_)),
+            Some(Protocol::Quic | Protocol::QuicV1)
+        )
+    );
+
+    if is_ipv6_quic {
+        log::warn!("Ignoring IPv6 QUIC address {m}. Currently unsupported. See https://github.com/libp2p/rust-libp2p/issues/4165.");
+        return false;
+    }
+
+    true
 }

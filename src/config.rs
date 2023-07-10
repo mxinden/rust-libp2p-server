@@ -1,3 +1,4 @@
+use libp2p::Multiaddr;
 use serde_derive::Deserialize;
 use std::error::Error;
 use std::path::Path;
@@ -6,6 +7,7 @@ use std::path::Path;
 #[serde(rename_all = "PascalCase")]
 pub struct Config {
     pub identity: Identity,
+    pub addresses: Addresses,
 }
 
 impl Config {
@@ -20,6 +22,13 @@ pub struct Identity {
     #[serde(rename = "PeerID")]
     pub peer_id: String,
     pub priv_key: String,
+}
+
+#[derive(Clone, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct Addresses {
+    pub swarm: Vec<Multiaddr>,
+    pub announce: Vec<Multiaddr>,
 }
 
 impl zeroize::Zeroize for Config {
