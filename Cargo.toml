@@ -17,7 +17,7 @@ libp2p = { git = "https://github.com/mxinden/rust-libp2p", branch = "rsa-keypair
 libp2p-quic = { git = "https://github.com/mxinden/rust-libp2p", branch = "rsa-keypair-protobuf", version = "0.8.0-alpha", default-features = false, features = ["async-std"] }
 log = "0.4"
 prometheus-client = "0.21.2"
-serde = "1.0.174"
+serde = "1.0.175"
 serde_derive = "1.0.125"
 serde_json = "1.0"
 structopt = "0.3.26"
