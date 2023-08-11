@@ -1940,7 +1940,7 @@ dependencies = [
 
 [[package]]
 name = "libp2p-server"
-version = "0.12.0"
+version = "0.12.1"
 dependencies = [
  "async-std",
  "base64 0.21.2",
