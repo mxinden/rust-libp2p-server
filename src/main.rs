@@ -4,6 +4,7 @@ use futures::future::Either;
 use futures::stream::StreamExt;
 use futures_timer::Delay;
 use libp2p::core::muxing::StreamMuxerBox;
+use libp2p::core::transport::OrTransport;
 use libp2p::core::upgrade;
 use libp2p::dns;
 use libp2p::identify;
@@ -95,7 +96,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             libp2p_quic::async_std::Transport::new(config)
         };
 
-        block_on(dns::DnsConfig::system(
+        let tcp_and_quic = block_on(dns::DnsConfig::system(
             libp2p::core::transport::OrTransport::new(quic_transport, tcp_transport),
         ))
         .unwrap()
@@ -103,8 +104,25 @@ fn main() -> Result<(), Box<dyn Error>> {
             Either::Left((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
             Either::Right((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
         })
-        .map_err(|err| io::Error::new(io::ErrorKind::Other, err))
-        .boxed()
+        .map_err(|err| io::Error::new(io::ErrorKind::Other, err));
+
+        let websocket = libp2p::websocket::WsConfig::new(
+            block_on(libp2p::dns::DnsConfig::system(
+                libp2p::tcp::async_io::Transport::new(libp2p::tcp::Config::default()),
+            ))
+            .unwrap(),
+        )
+        .upgrade(upgrade::Version::V1)
+        .authenticate(noise::Config::new(&local_keypair)?)
+        .multiplex(yamux::Config::default())
+        .timeout(Duration::from_secs(20));
+
+        OrTransport::new(websocket, tcp_and_quic)
+            .map(|either_output, _| match either_output {
+                Either::Left((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+                Either::Right((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+            })
+            .boxed()
     };
 
     let behaviour = behaviour::Behaviour::new(
