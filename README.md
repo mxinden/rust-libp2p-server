@@ -1,3 +1,5 @@
+**Moved to https://github.com/libp2p/rust-libp2p/tree/master/misc/server**
+
 # Rust libp2p Server
 
 A rust-libp2p based server implementation running:
